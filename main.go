@@ -1,34 +1,18 @@
 package main
 
 import (
-	"io"
+	"fmt"
 	"log"
 	"net/http"
-	"time"
-
-	"github.com/gorilla/mux"
 )
 
-func handler(w http.ResponseWriter, r *http.Request) {
-	io.WriteString(w, "Hello, world!\n")
+func HelloServer(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "Hello, %s!\n", r.URL.Path[1:])
 }
 
-// Route declaration
-func router() *mux.Router {
-	r := mux.NewRouter()
-	r.HandleFunc("/", handler)
-	return r
-}
-
-// Initiate web server
 func main() {
-	router := router()
-	srv := &http.Server{
-		Handler:      router,
-		Addr:         ":9100",
-		WriteTimeout: 15 * time.Second,
-		ReadTimeout:  15 * time.Second,
-	}
 
-	log.Fatal(srv.ListenAndServe())
+	http.HandleFunc("/", HelloServer)
+	fmt.Println("Server started at port 80")
+	log.Fatal(http.ListenAndServe(":80", nil))
 }
