@@ -16,6 +16,12 @@ func getEnvVariable(key string) string {
 	return os.Getenv(key)
 }
 
+func redirect(url string) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		http.Redirect(w, r, url, 301)
+	}
+}
+
 func indexHandler(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" {
 		http.NotFound(w, r)
@@ -26,10 +32,12 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	mux := http.NewServeMux()
+	staticHandler := http.FileServer(http.Dir("./assets"))
 	port := os.Getenv("PORT")
 	if port == "" {
 		log.Fatal("$PORT must be set")
 	}
 	mux.HandleFunc("/", indexHandler)
+	mux.Handle("/assets/", http.StripPrefix("/assets/", staticHandler))
 	log.Fatal(http.ListenAndServe(":"+port, mux))
 }
