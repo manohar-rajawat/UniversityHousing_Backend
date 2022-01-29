@@ -12,7 +12,7 @@ func main() {
 		log.Fatal("$PORT must be set")
 	}
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("<Center><h1>Welcome to my web server!</h1></Center>"))
+		w.Write([]byte("<h1>Welcome to my web server!</h1>"))
 	})
 	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
