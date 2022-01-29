@@ -1,19 +1,13 @@
 package main
 
 import (
-	"io"
 	"log"
 	"net/http"
-	"os"
 )
 
-func hello(w http.ResponseWriter, r *http.Request) {
-	io.WriteString(w, "Hello World")
-}
-
 func main() {
-	port := os.Getenv("PORT")
-	http.HandleFunc("/", hello)
-	log.Print("Listening on :" + port)
-	log.Fatal(http.ListenAndServe(":"+port, nil))
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("<h1>Welcome to my web server!</h1>"))
+	})
+	log.Fatal(http.ListenAndServe(":80", nil))
 }
