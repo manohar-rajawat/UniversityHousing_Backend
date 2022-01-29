@@ -3,11 +3,13 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
 )
 
 func main() {
+	port := os.Getenv("PORT")
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("<h1>Welcome to my web server!</h1>"))
 	})
-	log.Fatal(http.ListenAndServe(":80", nil))
+	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
