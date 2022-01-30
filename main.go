@@ -37,7 +37,7 @@ func main() {
 	if port == "" {
 		log.Fatal("$PORT must be set")
 	}
-	mux.HandleFunc("/", indexHandler)
 	mux.Handle("/assets/", http.StripPrefix("/assets/", staticHandler))
+	mux.HandleFunc("/", indexHandler)
 	log.Fatal(http.ListenAndServe(":"+port, mux))
 }
