@@ -70,7 +70,7 @@ func getUniversity(name string) ([]models.Univeristy, error) {
 	var universites []models.Univeristy
 
 	// create the select sql query
-	sqlStatement := `SELECT university.id,name,logo.url FROM university inner join logo on LOWER(university.name) like LOWER($1) and logo.universityid = university.id limit 10`
+	sqlStatement := `SELECT university.id,name,logo.url FROM university inner join logo on LOWER(university.name) like LOWER($1) and logo.universityid = university.id limit 30`
 
 	// execute the sql statement
 	rows, err := db.Query(sqlStatement, "%"+name+"%")
