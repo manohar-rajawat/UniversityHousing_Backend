@@ -23,7 +23,7 @@ type response struct {
 // create connection with postgres db
 func createConnection() *sql.DB {
 	// Open the connection
-	db, err := sql.Open("postgres", os.Getenv("POSTGRES_URL"))
+	db, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
 
 	if err != nil {
 		panic(err)
