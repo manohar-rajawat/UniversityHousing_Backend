@@ -60,6 +60,23 @@ func GetUniversity(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(res)
 }
 
+func GetAllUniversity(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	// get all the users in the db
+	users, err := getAllUniversity()
+
+	if err != nil {
+		log.Fatalf("Unable to get all user. %v", err)
+	}
+	res := response{
+		Status: "OK",
+		Data:   users,
+	}
+	// send all the users as response
+	json.NewEncoder(w).Encode(res)
+}
+
 // get one user from the DB by its userid
 func getUniversity(name string) ([]models.Univeristy, error) {
 	// create the postgres db connection
@@ -74,6 +91,45 @@ func getUniversity(name string) ([]models.Univeristy, error) {
 
 	// execute the sql statement
 	rows, err := db.Query(sqlStatement, "%"+name+"%")
+	if err != nil {
+		log.Fatalf("Unable to execute the query. %v", err)
+	}
+
+	// close the statement
+	defer rows.Close()
+
+	// iterate over the rows
+	for rows.Next() {
+		var university models.Univeristy
+		// unmarshal the row object to user
+		err = rows.Scan(&university.ID, &university.Name, &university.URL)
+
+		if err != nil {
+			log.Fatalf("Unable to scan the row. %v", err)
+		}
+
+		// append the user in the users slice
+		universites = append(universites, university)
+
+	}
+
+	// return empty user on error
+	return universites, err
+}
+
+func getAllUniversity() ([]models.Univeristy, error) {
+	// create the postgres db connection
+	db := createConnection()
+
+	// close the db connection
+	defer db.Close()
+	var universites []models.Univeristy
+
+	// create the select sql query
+	sqlStatement := `SELECT university.id,name,logo.url FROM university inner join logo on logo.universityid = university.id`
+
+	// execute the sql statement
+	rows, err := db.Query(sqlStatement)
 	if err != nil {
 		log.Fatalf("Unable to execute the query. %v", err)
 	}
