@@ -18,3 +18,7 @@ func main() {
 	fmt.Println("Starting server on the port " + port)
 	log.Fatal(http.ListenAndServe(":"+port, r))
 }
+
+func run() string {
+	return "Setup Travis CI for Golang project"
+}
